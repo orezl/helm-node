@@ -38,8 +38,8 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_CONTAINER_REGISTRY: "your-azure-container-registry"
-  CONTAINER_NAME: "your-container-name"
+  JFROG_CONTAINER_REGISTRY: "http://40.121.57.74:8082/artifactory/api/docker/test"
+  CONTAINER_NAME: "test"
   RESOURCE_GROUP: "your-resource-group"
   CLUSTER_NAME: "your-cluster-name"
   CHART_PATH: "your-chart-path"
@@ -55,19 +55,11 @@ jobs:
       # Checks out the repository this file is in
       - uses: actions/checkout@v3
 
-      # Logs in with your Azure credentials
-      - name: Azure login
-        uses: azure/login@v1.4.6
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
       # Builds and pushes an image up to your Azure Container Registry
       - name: Build and push image to ACR
         run: |
-          az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
-
+          docker login -u ${{ secrets.uname }} -p ${{ secrets.pwd }}
+          docker push ${{ env.JFROG_CONTAINER_REGISTRY }}:${{ env.CONTAINER_NAME }}_${{ github.sha }}
   deploy:
     permissions:
       actions: read
