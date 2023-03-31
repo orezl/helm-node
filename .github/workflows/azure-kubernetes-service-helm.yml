@@ -38,7 +38,7 @@ on:
   workflow_dispatch:
 
 env:
-  JFROG_CONTAINER_REGISTRY: "http://40.121.57.74:8082/artifactory/api/docker/test"
+  JFROG_CONTAINER_REGISTRY: "http://40.121.57.74:8082"
   CONTAINER_NAME: "test"
   RESOURCE_GROUP: "your-resource-group"
   CLUSTER_NAME: "your-cluster-name"
@@ -58,8 +58,9 @@ jobs:
       # Builds and pushes an image up to your Azure Container Registry
       - name: Build and push image to ACR
         run: |
+          sudo echo '{"insecure-registries" : [ "${{ env.JFROG_CONTAINER_REGISTRY }}" ]}' >> /etc/docker/daemon.json
           docker login ${{ env.JFROG_CONTAINER_REGISTRY }} -u ${{ secrets.uname }} -p ${{ secrets.pwd }}
-          docker push ${{ env.JFROG_CONTAINER_REGISTRY }}:${{ env.CONTAINER_NAME }}_${{ github.sha }}
+          docker push ${{ env.JFROG_CONTAINER_REGISTRY }}/artifactory/api/docker/${{ env.CONTAINER_NAME }}:${{ github.sha }}
   deploy:
     permissions:
       actions: read
