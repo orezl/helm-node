@@ -58,7 +58,7 @@ jobs:
       # Builds and pushes an image up to your Azure Container Registry
       - name: Build and push image to ACR
         run: |
-          docker login -u ${{ secrets.uname }} -p ${{ secrets.pwd }}
+          docker login ${{ env.JFROG_CONTAINER_REGISTRY }} -u ${{ secrets.uname }} -p ${{ secrets.pwd }}
           docker push ${{ env.JFROG_CONTAINER_REGISTRY }}:${{ env.CONTAINER_NAME }}_${{ github.sha }}
   deploy:
     permissions:
