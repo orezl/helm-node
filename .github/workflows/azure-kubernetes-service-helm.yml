@@ -60,8 +60,8 @@ jobs:
       - name: Build and push image to ACR
         run: |
           docker login -u ${{ secrets.uname }} -p ${{ secrets.pwd }}
-          docker build -t ${{ env.CONTAINER_NAME }}:${{ github.sha }} .
-          docker push ${{ env.CONTAINER_NAME }}:${{ github.sha }} # ${{ env.JFROG_CONTAINER_REGISTRY }}/artifactory/api/docker/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+          docker build -t rahulkhanna2910/${{ env.CONTAINER_NAME }}:${{ github.sha }} .
+          docker push rahulkhanna2910/${{ env.CONTAINER_NAME }}:${{ github.sha }} # ${{ env.JFROG_CONTAINER_REGISTRY }}/artifactory/api/docker/${{ env.CONTAINER_NAME }}:${{ github.sha }}
   deploy:
     permissions:
       actions: write
