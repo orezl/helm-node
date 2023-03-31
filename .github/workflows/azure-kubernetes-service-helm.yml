@@ -44,7 +44,7 @@ env:
   CLUSTER_NAME: "your-cluster-name"
   CHART_PATH: "your-chart-path"
   CHART_OVERRIDE_PATH: "your-chart-override-path"
-  DOCKER_OPTS:  "http://40.121.57.74:8082"
+  DOCKER_OPTS:  "--insecure-registry=http://40.121.57.74:8082"
 
 jobs:
   buildImage:
@@ -59,8 +59,8 @@ jobs:
       - name: Build and push image to ACR
         run: |
           # sudo echo '{"insecure-registries" : [ "${{ env.JFROG_CONTAINER_REGISTRY }}" ]}' >> /etc/docker/daemon.json
-          docker restart
-          docker login ${{ env.JFROG_CONTAINER_REGISTRY }} -u ${{ secrets.uname }} -p ${{ secrets.pwd }}
+          sudo systemctl restart docker
+          docker login -u ${{ secrets.uname }} -p ${{ secrets.pwd }}
           docker push ${{ env.JFROG_CONTAINER_REGISTRY }}/artifactory/api/docker/${{ env.CONTAINER_NAME }}:${{ github.sha }}
   deploy:
     permissions:
